@@ -56,9 +56,9 @@ public class AStar {
         private class Cell {
             int row;   // the row number of the cell(row 0 is the top)
             int col;   // the column number of the cell (Column 0 is the left)
-            int g;     // the value of the function g of A* and Greedy algorithms
-            int h;     // the value of the function h of A* and Greedy algorithms
-            int f;     // the value of the function h of A* and Greedy algorithms
+            int g;     // the value of the function g of A* 
+            int h;     // the value of the function h of A* 
+            int f;     // the value of the function h of A* 
             int dist;  // the distance of the cell from the initial position of the robot
                        // Ie the label that updates the Dijkstra's algorithm
             Cell prev; // Each state corresponds to a cell
@@ -119,11 +119,6 @@ public class AStar {
                         if (cur_val == OBST){
                             grid[row][col] = EMPTY;
                         }
-                        if (realTime) {
-                            if (dijkstra.isSelected()) {
-                               initializeDijkstra();
-                            }
-                        }
                     }
                 }
                 if (realTime) {
@@ -170,11 +165,6 @@ public class AStar {
                             }
                         } else if (grid[row][col] != ROBOT && grid[row][col] != TARGET){
                             grid[row][col] = OBST;
-                        }
-                        if (realTime) {
-                            if (dijkstra.isSelected()) {
-                               initializeDijkstra();
-                            }
                         }
                     }
                 }
@@ -226,17 +216,13 @@ public class AStar {
                     aStar.setEnabled(false);
                     timer.setDelay(0);
                     timer.start();
-                    if (dijkstra.isSelected()) {
-                       initializeDijkstra();
-                    }
+       
                     checkTermination();
                 } else if (cmd.equals("Step-by-Step") && !found && !endOfSearch) {
                     realTime = false;
                     // The Dijkstra's initialization should be done just before the
                     // start of search, because obstacles must be in place.
-                    if (!searching && dijkstra.isSelected()) {
-                        initializeDijkstra();
-                    }
+  
                     searching = true;
                     message.setText(msgSelectStepByStepEtc);
                     realTimeButton.setEnabled(false);
@@ -244,16 +230,14 @@ public class AStar {
                     timer.stop();
                     // Here we decide whether we can continue the
                     // 'Step-by-Step' search or not.
-                    // In the case of DFS, BFS, A* and Greedy algorithms
+                   
                     // here we have the second step:
                     // 2. If OPEN SET = [], then terminate. There is no solution.
                     checkTermination();
                     repaint();
                 } else if (cmd.equals("Animacja ruchu") && !endOfSearch) {
                     realTime = false;
-                    if (!searching && dijkstra.isSelected()) {
-                        initializeDijkstra();
-                    }
+
                     searching = true;
                     message.setText(msgSelectStepByStepEtc);
                     realTimeButton.setEnabled(false);
@@ -272,7 +256,7 @@ public class AStar {
             public void actionPerformed(ActionEvent evt) {
                 // Here we decide whether we can continue or not
                 // the search with 'Animation'.
-                // In the case of DFS, BFS, A* and Greedy algorithms
+                // In the case of  A*  algorithms
                 // here we have the second step:
                 // 2. If OPEN SET = [], then terminate. There is no solution.
                 checkTermination();
@@ -286,16 +270,7 @@ public class AStar {
         } // end nested class RepaintAction
        
         public void checkTermination() {
-            if ((dijkstra.isSelected() && graph.isEmpty()) ||
-                          (!dijkstra.isSelected() && openSet.isEmpty()) ) {
-                endOfSearch = true;
-                grid[robotStart.row][robotStart.col]=ROBOT;
-                message.setText(msgNoSolution);
-                stepButton.setEnabled(false);
-                animationButton.setEnabled(false);
-                slider.setEnabled(false);
-                repaint();
-            } else {
+           
                 expandNode();
                 if (found) {
                     endOfSearch = true;
@@ -305,8 +280,8 @@ public class AStar {
                     slider.setEnabled(false);
                     repaint();
                 }
-            }
-        }
+          }
+        
 
  
         /**
@@ -717,7 +692,7 @@ public class AStar {
         JButton resetButton, mazeButton, clearButton, realTimeButton, stepButton, animationButton;
          
         // buttons for selecting the algorithm
-        JRadioButton dfs, bfs, aStar, greedy, dijkstra;
+        JRadioButton aStar;
          
         // the slider for adjusting the speed of the animation
         JSlider slider;
@@ -810,44 +785,19 @@ public class AStar {
                 }
             });
              
-            // ButtonGroup that synchronizes the five RadioButtons
-            // choosing the algorithm, so that only one
-            // can be selected anytime
             ButtonGroup algoGroup = new ButtonGroup();
- 
-            dfs = new JRadioButton("DFS");
-            dfs.setToolTipText("Depth First Search algorithm");
-            algoGroup.add(dfs);
-            dfs.addActionListener(new ActionHandler());
- 
-            bfs = new JRadioButton("BFS");
-            bfs.setToolTipText("Breadth First Search algorithm");
-            algoGroup.add(bfs);
-            bfs.addActionListener(new ActionHandler());
  
             aStar = new JRadioButton("A*");
             aStar.setToolTipText("A* algorithm");
             algoGroup.add(aStar);
             aStar.addActionListener(new ActionHandler());
- 
-            greedy = new JRadioButton("Greedy");
-            greedy.setToolTipText("Greedy search algorithm");
-            algoGroup.add(greedy);
-            greedy.addActionListener(new ActionHandler());
- 
-            dijkstra = new JRadioButton("Dijkstra");
-            dijkstra.setToolTipText("Dijkstra's algorithm");
-            algoGroup.add(dijkstra);
-            dijkstra.addActionListener(new ActionHandler());
- 
+  
             JPanel algoPanel = new JPanel();
             algoPanel.setBorder(javax.swing.BorderFactory.
                     createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(),
                     "Algorytm", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
                     javax.swing.border.TitledBorder.TOP, new java.awt.Font("Helvetica", 0, 14)));
-             
-            dfs.setSelected(true);  // DFS is initially selected 
-             
+                          
             diagonal = new
                     JCheckBox("Diagonal movements");
             diagonal.setToolTipText("Diagonal movements are also allowed");
@@ -968,12 +918,7 @@ public class AStar {
             grid = new int[rows][columns];
             robotStart = new Cell(rows-2,1);
             targetPos = new Cell(1,columns-2);
-            dfs.setEnabled(true);
-            dfs.setSelected(true);
-            bfs.setEnabled(true);
             aStar.setEnabled(true);
-            greedy.setEnabled(true);
-            dijkstra.setEnabled(true);
             diagonal.setSelected(false);
             diagonal.setEnabled(true);
             drawArrows.setSelected(false);
@@ -990,68 +935,16 @@ public class AStar {
          * Expands a node and creates his successors
          */
         private void expandNode(){
-            // Dijkstra's algorithm to handle separately
-            if (dijkstra.isSelected()){
-                Cell u;
-                // 11: while Q is not empty:
-                if (graph.isEmpty()){
-                    return;
-                }
-                // 12:  u := vertex in Q (graph) with smallest distance in dist[] ;
-                // 13:  remove u from Q (graph);
-                u = graph.remove(0);
-                // Add vertex u in closed set
-                closedSet.add(u);
-                // If target has been found ...
-                if (u.row == targetPos.row && u.col == targetPos.col){
-                    found = true;
-                    return;
-                }
-                // Counts nodes that have expanded.
-                expanded++;
-                // Update the color of the cell
-                grid[u.row][u.col] = CLOSED;
-                // 14: if dist[u] = infinity:
-                if (u.dist == INFINITY){
-                    // ... then there is no solution.
-                    // 15: break;
-                    return;
-                // 16: end if
-                } 
-                // Create the neighbors of u
-                ArrayList<Cell> neighbors = createSuccesors(u, false);
-                // 18: for each neighbor v of u:
-                neighbors.stream().forEach((v) -> {
-                    // 20: alt := dist[u] + dist_between(u, v) ;
-                    int alt = u.dist + distBetween(u,v);
-                    // 21: if alt < dist[v]:
-                    if (alt < v.dist) {
-                        // 22: dist[v] := alt ;
-                        v.dist = alt;
-                        // 23: previous[v] := u ;
-                        v.prev = u;
-                        // Update the color of the cell
-                        grid[v.row][v.col] = FRONTIER;
-                        // 24: decrease-key v in Q;
-                        // (sort list of nodes with respect to dist)
-                        Collections.sort(graph, new CellComparatorByDist());
-                    }
-                }); // The handling of the other four algorithms
-            } else {
                 Cell current;
-                if (dfs.isSelected() || bfs.isSelected()) {
-                    // Here is the 3rd step of the algorithms DFS and BFS
-                    // 3. Remove the first state, Si, from OPEN SET ...
-                    current = openSet.remove(0);
-                } else {
-                    // Here is the 3rd step of the algorithms A* and Greedy
+                
+                    // Here is the 3rd step of the algorithms A*
                     // 3. Remove the first state, Si, from OPEN SET,
                     // for which f(Si) ≤ f(Sj) for all other
                     // open states Sj  ...
                     // (sort first OPEN SET list with respect to 'f')
                     Collections.sort(openSet, new CellComparatorByF());
                     current = openSet.remove(0);
-                }
+                
                 // ... and add it to CLOSED SET.
                 closedSet.add(0,current);
                 // Update the color of the cell
@@ -1078,20 +971,7 @@ public class AStar {
                 // Here is the 5th step of the algorithms
                 // 5. For each successor of Si, ...
                 succesors.stream().forEach((cell) -> {
-                    // ... if we are running DFS ...
-                    if (dfs.isSelected()) {
-                        // ... add the successor at the beginning of the list OPEN SET
-                        openSet.add(0, cell);
-                        // Update the color of the cell
-                        grid[cell.row][cell.col] = FRONTIER;
-                        // ... if we are runnig BFS ...
-                    } else if (bfs.isSelected()){
-                        // ... add the successor at the end of the list OPEN SET
-                        openSet.add(cell);
-                        // Update the color of the cell
-                        grid[cell.row][cell.col] = FRONTIER;
-                        // ... if we are running A* or Greedy algorithms (step 5 of A* algorithm) ...
-                    } else if (aStar.isSelected() || greedy.isSelected()){
+                     if (aStar.isSelected() ){
                         // ... calculate the value f(Sj) ...
                         int dxg = current.col-cell.col;
                         int dyg = current.row-cell.row;
@@ -1100,22 +980,16 @@ public class AStar {
                         if (diagonal.isSelected()){
                             // with diagonal movements 
                             // calculate 1000 times the Euclidean distance
-                            if (greedy.isSelected()) {
-                                // especially for the Greedy ...
-                                cell.g = 0;
-                            } else {
+                            
                                 cell.g = current.g+(int)((double)1000*Math.sqrt(dxg*dxg + dyg*dyg));
-                            }
+                            
                             cell.h = (int)((double)1000*Math.sqrt(dxh*dxh + dyh*dyh));
                         } else {
                             // without diagonal movements
                             // calculate Manhattan distances
-                            if (greedy.isSelected()) {
-                                // especially for the Greedy ...
-                                cell.g = 0;
-                            } else {
+                            
                                 cell.g = current.g+Math.abs(dxg)+Math.abs(dyg);
-                            }
+                            
                             cell.h = Math.abs(dxh)+Math.abs(dyh);
                         }
                         cell.f = cell.g+cell.h;
@@ -1169,7 +1043,7 @@ public class AStar {
                     }
                 });
             }
-        } //end expandNode()
+
          
         /**
          * Creates the successors of a state/cell
@@ -1194,9 +1068,9 @@ public class AStar {
             // If not at the topmost limit of the grid
             // and the up-side cell is not an obstacle ...
             if (r > 0 && grid[r-1][c] != OBST &&
-                    // ... and (only in the case are not running the A* or Greedy)
+                    // ... and (only in the case are not running the A* )
                     // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                    ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                    ((aStar.isSelected()) ? true :
                           isInList(openSet,new Cell(r-1,c)) == -1 &&
                           isInList(closedSet,new Cell(r-1,c)) == -1)) {
                 Cell cell = new Cell(r-1,c);
@@ -1209,21 +1083,13 @@ public class AStar {
                 // the present method createSuccesors() to collaborate
                 // with the method findConnectedComponent(), which creates
                 // the connected component when Dijkstra's initializes.
-                if (dijkstra.isSelected()){
-                    if (makeConnected) {
-                        temp.add(cell);
-                    } else {
-                        int graphIndex = isInList(graph,cell);
-                        if (graphIndex > -1) {
-                            temp.add(graph.get(graphIndex));
-                        }
-                    }
-                } else {
+               
+                 
                     // ... update the pointer of the up-side cell so it points the current one ...
                     cell.prev = current;
                     // ... and add the up-side cell to the successors of the current one. 
                     temp.add(cell);
-                 }
+                 
             }
             if (diagonal.isSelected()){
                 // If we are not even at the topmost nor at the rightmost border of the grid
@@ -1233,53 +1099,35 @@ public class AStar {
                         // (because it is not reasonable to allow 
                         // the robot to pass through a "slot")                        
                         (grid[r-1][c] != OBST || grid[r][c+1] != OBST) &&
-                        // ... and (only in the case are not running the A* or Greedy)
+                        // ... and (only in the case are not running the A* )
                         // not already belongs neither to the OPEN SET nor CLOSED SET ...
-                        ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                        ((aStar.isSelected() ) ? true :
                               isInList(openSet,new Cell(r-1,c+1)) == -1 &&
                               isInList(closedSet,new Cell(r-1,c+1)) == -1)) {
                     Cell cell = new Cell(r-1,c+1);
-                    if (dijkstra.isSelected()){
-                        if (makeConnected) {
-                            temp.add(cell);
-                        } else {
-                            int graphIndex = isInList(graph,cell);
-                            if (graphIndex > -1) {
-                                temp.add(graph.get(graphIndex));
-                            }
-                        }
-                    } else {
+                    
                         // ... update the pointer of the up-right-side cell so it points the current one ...
                         cell.prev = current;
                         // ... and add the up-right-side cell to the successors of the current one. 
                         temp.add(cell);
-                    }
+                    
                 }
             }
             // If not at the rightmost limit of the grid
             // and the right-side cell is not an obstacle ...
             if (c < columns-1 && grid[r][c+1] != OBST &&
-                    // ... and (only in the case are not running the A* or Greedy)
+                    // ... and (only in the case are not running the A* )
                     // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                    ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected())? true :
+                    ((aStar.isSelected() )? true :
                           isInList(openSet,new Cell(r,c+1)) == -1 &&
                           isInList(closedSet,new Cell(r,c+1)) == -1)) {
                 Cell cell = new Cell(r,c+1);
-                if (dijkstra.isSelected()){
-                    if (makeConnected) {
-                        temp.add(cell);
-                    } else {
-                        int graphIndex = isInList(graph,cell);
-                        if (graphIndex > -1) {
-                            temp.add(graph.get(graphIndex));
-                        }
-                    }
-                } else {
+             
                     // ... update the pointer of the right-side cell so it points the current one ...
                     cell.prev = current;
                     // ... and add the right-side cell to the successors of the current one. 
                     temp.add(cell);
-                }
+                
             }
             if (diagonal.isSelected()){
                 // If we are not even at the lowermost nor at the rightmost border of the grid
@@ -1287,27 +1135,19 @@ public class AStar {
                 if (r < rows-1 && c < columns-1 && grid[r+1][c+1] != OBST &&
                         // ... and one of the down-side or right-side cells are not obstacles ...
                         (grid[r+1][c] != OBST || grid[r][c+1] != OBST) &&
-                        // ... and (only in the case are not running the A* or Greedy)
+                        // ... and (only in the case are not running the A* )
                         // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                        ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                        ((aStar.isSelected()) ? true :
                               isInList(openSet,new Cell(r+1,c+1)) == -1 &&
                               isInList(closedSet,new Cell(r+1,c+1)) == -1)) {
                     Cell cell = new Cell(r+1,c+1);
-                    if (dijkstra.isSelected()){
-                        if (makeConnected) {
-                            temp.add(cell);
-                        } else {
-                            int graphIndex = isInList(graph,cell);
-                            if (graphIndex > -1) {
-                                temp.add(graph.get(graphIndex));
-                            }
-                        }
-                    } else {
+
+
                         // ... update the pointer of the downr-right-side cell so it points the current one ...
                         cell.prev = current;
                         // ... and add the down-right-side cell to the successors of the current one. 
                         temp.add(cell);
-                    }
+                    
                 }
             }
             // If not at the lowermost limit of the grid
@@ -1315,25 +1155,14 @@ public class AStar {
             if (r < rows-1 && grid[r+1][c] != OBST &&
                     // ... and (only in the case are not running the A* or Greedy)
                     // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                    ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                    ((aStar.isSelected() ) ? true :
                           isInList(openSet,new Cell(r+1,c)) == -1 &&
                           isInList(closedSet,new Cell(r+1,c)) == -1)) {
                 Cell cell = new Cell(r+1,c);
-                if (dijkstra.isSelected()){
-                    if (makeConnected) {
-                        temp.add(cell);
-                    } else {
-                        int graphIndex = isInList(graph,cell);
-                        if (graphIndex > -1) {
-                            temp.add(graph.get(graphIndex));
-                        }
-                    }
-                } else {
-                   // ... update the pointer of the down-side cell so it points the current one ...
+               
                     cell.prev = current;
-                    // ... and add the down-side cell to the successors of the current one. 
                     temp.add(cell);
-                }
+                
             }
             if (diagonal.isSelected()){
                 // If we are not even at the lowermost nor at the leftmost border of the grid
@@ -1343,51 +1172,33 @@ public class AStar {
                         (grid[r+1][c] != OBST || grid[r][c-1] != OBST) &&
                         // ... and (only in the case are not running the A* or Greedy)
                         // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                        ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                        ((aStar.isSelected() ) ? true :
                               isInList(openSet,new Cell(r+1,c-1)) == -1 &&
                               isInList(closedSet,new Cell(r+1,c-1)) == -1)) {
                     Cell cell = new Cell(r+1,c-1);
-                    if (dijkstra.isSelected()){
-                        if (makeConnected) {
-                            temp.add(cell);
-                        } else {
-                            int graphIndex = isInList(graph,cell);
-                            if (graphIndex > -1) {
-                                temp.add(graph.get(graphIndex));
-                            }
-                        }
-                    } else {
+                   
                         // ... update the pointer of the down-left-side cell so it points the current one ...
                         cell.prev = current;
                         // ... and add the down-left-side cell to the successors of the current one. 
                         temp.add(cell);
                     }
-                }
+                
             }
             // If not at the leftmost limit of the grid
             // and the left-side cell is not an obstacle ...
             if (c > 0 && grid[r][c-1] != OBST && 
                     // ... and (only in the case are not running the A* or Greedy)
                     // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                    ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                    ((aStar.isSelected() ) ? true :
                           isInList(openSet,new Cell(r,c-1)) == -1 &&
                           isInList(closedSet,new Cell(r,c-1)) == -1)) {
                 Cell cell = new Cell(r,c-1);
-                if (dijkstra.isSelected()){
-                    if (makeConnected) {
-                        temp.add(cell);
-                    } else {
-                        int graphIndex = isInList(graph,cell);
-                        if (graphIndex > -1) {
-                            temp.add(graph.get(graphIndex));
-                        }
-                    }
-                } else {
+               
                    // ... update the pointer of the left-side cell so it points the current one ...
                     cell.prev = current;
                     // ... and add the left-side cell to the successors of the current one. 
                     temp.add(cell);
-                }
+                
             }
             if (diagonal.isSelected()){
                 // If we are not even at the topmost nor at the leftmost border of the grid
@@ -1397,25 +1208,16 @@ public class AStar {
                         (grid[r-1][c] != OBST || grid[r][c-1] != OBST) &&
                         // ... and (only in the case are not running the A* or Greedy)
                         // not already belongs neither to the OPEN SET nor to the CLOSED SET ...
-                        ((aStar.isSelected() || greedy.isSelected() || dijkstra.isSelected()) ? true :
+                        ((aStar.isSelected() ) ? true :
                               isInList(openSet,new Cell(r-1,c-1)) == -1 &&
                               isInList(closedSet,new Cell(r-1,c-1)) == -1)) {
                     Cell cell = new Cell(r-1,c-1);
-                    if (dijkstra.isSelected()){
-                        if (makeConnected) {
-                            temp.add(cell);
-                        } else {
-                            int graphIndex = isInList(graph,cell);
-                            if (graphIndex > -1) {
-                                temp.add(graph.get(graphIndex));
-                            }
-                        }
-                    } else {
+                    
                         // ... update the pointer of the up-left-side cell so it points the current one ...
                         cell.prev = current;
                         // ... and add the up-left-side cell to the successors of the current one. 
                         temp.add(cell);
-                    }
+                  
                 }
             }
             // When DFS algorithm is in use, cells are added one by one at the beginning of the
@@ -1424,9 +1226,7 @@ public class AStar {
             // the first in the list.
             // For the Greedy, A* and Dijkstra's no issue, because the list is sorted
             // according to 'f' or 'dist' before extracting the first element of.
-            if (dfs.isSelected()){
-                Collections.reverse(temp);
-            }
+           
             return temp;
         } // end createSuccesors()
          
@@ -1551,7 +1351,7 @@ public class AStar {
                 robotStart = new Cell(rows-2,1);
                 targetPos = new Cell(1,columns-2);
             }
-            if (aStar.isSelected() || greedy.isSelected()){
+            if (aStar.isSelected() ){
                 robotStart.g = 0;
                 robotStart.h = 0;
                 robotStart.f = 0;
@@ -1690,11 +1490,9 @@ public class AStar {
                             // the arrowhead is the predecessor cell.
                             Cell head;
                             if (grid[r][c] == FRONTIER){
-                                if (dijkstra.isSelected()){
-                                    head = findPrev(graph,new Cell(r,c));
-                                } else {
+                               
                                     head = findPrev(openSet,new Cell(r,c));
-                                }
+                                
                             } else {
                                 head = findPrev(closedSet,new Cell(r,c));
                             }
