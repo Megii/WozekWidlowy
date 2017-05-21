@@ -37,29 +37,20 @@ public class Game extends JPanel implements MouseListener
 			{ 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1},//
 			{ 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1},//
 			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1},//
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //
-			{ 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1},//
-			{ 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1},//
-			
 			 };
-	int[][] m1 = { //
-			{ 0, 0, 0, 0, 0, 0, 0 }, //
-			{ 0, 0, 0, 1, 0, 0, 0 }, //
-			{ 0, 0, 0, 1, 0, 0, 0 }, //
-			{ 0, 0, 0, 1, 0, 0, 0 }, //
-			{ 0, 0, 0, 0, 0, 0, 0 } };
+
 
 	public Game()
 	{
-		// Change this to whatever map you want, and feel free to add more.
-		int[][] m = m0;
-//		int[][] m = m1;
 
-		setPreferredSize(new Dimension(m[0].length * 50, m.length * 50));
+		int[][] m = m0;
+
+
+		setPreferredSize(new Dimension(m[0].length * 60, m.length * 60));
 		addMouseListener(this);
 		
 		map = new Map(m);
-		player = new Player(1, 17);
+		player = new Player(0, 15);
 	}
 
 	public void update()
@@ -71,17 +62,17 @@ public class Game extends JPanel implements MouseListener
 	{
 		map.drawMap(g, path);
 		g.setColor(Color.GRAY);
-		for (int x = 0; x < getWidth(); x += 50)
+		for (int x = 0; x < getWidth(); x += 60)
 		{
 			g.drawLine(x, 0, x, getHeight());
 		}
-		for (int y = 0; y < getHeight(); y += 50)
+		for (int y = 0; y < getHeight(); y += 60)
 		{
 			g.drawLine(0, y, getWidth(), y);
 		}
 		
 		g.setColor(Color.RED);
-		g.fillRect(player.getX() * 50 + player.getSx(), player.getY() * 50 + player.getSy(), 50, 50);
+		g.fillRect(player.getX() * 60 + player.getSx(), player.getY() * 60 + player.getSy(), 60, 60);
 	}
 
 	@Override
@@ -102,8 +93,8 @@ public class Game extends JPanel implements MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		int mx = e.getX() /50;
-		int my = e.getY() /50;
+		int mx = e.getX() /60;
+		int my = e.getY() /60;
 		if (map.getNode(mx, my).isWalkable())
 		{
 			path = map.findPath(player.getX(), player.getY(), mx, my);

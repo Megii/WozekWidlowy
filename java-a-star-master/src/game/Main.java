@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 public class Main
 {
 
-	public static final int WIDTH = 1040;
-	public static final int HEIGHT = 1180;
+	public static final int WIDTH = 1240;
+	public static final int HEIGHT = 1380;
 	public static final String NAME = "Magazyn";
 
 	private static BufferedImage image;

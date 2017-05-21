@@ -87,7 +87,7 @@ public class Map
 				{
 					g.setColor(Color.WHITE);
 				}
-				g.fillRect(x * 50, y * 50, 50, 50);
+				g.fillRect(x * 60, y * 60, 60, 60);
 			}
 		}
 	}
