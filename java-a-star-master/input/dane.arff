@@ -1,0 +1,16 @@
+@relation package
+
+@attribute type {zywnosc, chemia, tekstylia}
+@attribute size {male, duze}
+@attribute time {krotki, dlugi}
+@attribute result {czerwony, zielony, pomaranczowy, niebieski}
+
+@data
+chemia,duze,dlugi,czerwony
+chemia,male,dlugi,zielony
+zywnosc,duze,krotki,pomaranczowy
+zywnosc,duze,dlugi,czerwony
+zywnosc,male,krotki,niebieski
+zywnosc,male,dlugi,zielony
+tekstylia,duze,dlugi,czerwony
+tekstylia,male,dlugi,zielony

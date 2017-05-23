@@ -3,41 +3,62 @@ package game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import game.astar.Map;
 import game.astar.Node;
+import game.entity.Pack;
 import game.entity.Player;
+import weka.classifiers.trees.Id3;
+import weka.core.Instance;
+import weka.core.NoSupportForMissingValuesException;
 
 public class Game extends JPanel implements MouseListener
 {
 
 	private Map map;
 	private Player player;
+	private Pack package1;
+	private Pack package2;
+	private Pack package3;
+	private Pack package4;
 	private List<Node> path;
+	private DecisionTree decisionTree;
+	private Id3 id3tree;
+	private Image image;
+	private Image pack;
+	
+	//2 - czerwony
+	//3 - zielony
+	//4 - niebieski
+	//5 - pomaranczonwy
 
-	int[][] m0 = { //
-			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1},//
-			{ 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},//
-			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1},//
-			{ 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},//
-			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1},//
-			{ 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},//
-			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1},//
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //
-			{ 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},//
-			{ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1},//
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //
-			{ 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1},//
-			{ 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1},//
-			{ 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1},//
-			{ 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1},//
-			{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1},//
-			 };
+	int[][] m0 =  {// 0	 1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
+					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//0
+					{ 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1},//1
+					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//2
+					{ 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1},//3
+					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//4
+					{ 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1},//5
+					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//6
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //7
+					{ 1, 4, 1, 1, 4, 1, 5, 1, 5, 1, 3, 1, 3, 1, 2, 1, 2, 2, 1},//8
+					{ 1, 4, 4, 4, 4, 1, 5, 1, 5, 1, 3, 3, 3, 1, 2, 1, 2, 2, 1},//9
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //10
+					{ 1, 4, 4, 1, 4, 1, 4, 4, 4, 1, 5, 5, 5, 1, 5, 1, 5, 5, 1},//11
+					{ 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 5, 1},//12
+					{ 1, 4, 4, 1, 4, 1, 4, 4, 4, 1, 5, 5, 5, 1, 5, 5, 1, 5, 1},//13
+					{ 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 5, 1},//14
+					{ 1, 4, 4, 4, 4, 1, 4, 4, 4, 1, 5, 5, 5, 1, 5, 5, 1, 5, 1},//15
+					 };	
 
 
 	public Game()
@@ -45,22 +66,64 @@ public class Game extends JPanel implements MouseListener
 
 		int[][] m = m0;
 
-
 		setPreferredSize(new Dimension(m[0].length * 60, m.length * 60));
 		addMouseListener(this);
 		
+		decisionTree = new DecisionTree("input/dane.arff");		
+		id3tree = decisionTree.trainTheTree();
+		System.out.println(id3tree.toString());
+		
+		try {
+			image = ImageIO.read(new File("input/wozek.png"));
+			pack = ImageIO.read(new File("input/pack.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		map = new Map(m);
 		player = new Player(0, 15);
+		package1 = new Pack(4,1,"chemia","male","dlugi");
+		package2 = new Pack(13,0,"zywnosc","duze","krotki");
+		package3 = new Pack(2,14,"tekstylia","duze","dlugi");
+		package4 = new Pack(10,14,"zywnosc","male","dlugi");
 	}
 
 	public void update()
 	{
 		player.update();
+		
+		if(compareLocation(player.getX(),package1.getX()) && compareLocation(player.getY(),package1.getY())){
+			deliverPackage(package1);
+			
+			package1.setX(-1);
+			package1.setY(-1);
+							
+		}
+		if(compareLocation(player.getX(),package2.getX()) && compareLocation(player.getY(),package2.getY())){
+			deliverPackage(package2);
+			
+			package2.setX(-1);
+			package2.setY(-1);
+			
+		}
+		if(compareLocation(player.getX(),package3.getX()) && compareLocation(player.getY(),package3.getY())){
+			deliverPackage(package3);
+			
+			package3.setX(-1);
+			package3.setY(-1);
+		}
+		if(compareLocation(player.getX(),package4.getX()) && compareLocation(player.getY(),package4.getY())){
+			deliverPackage(package4);
+			
+			package4.setX(-1);
+			package4.setY(-1);
+		}
 	}
 
 	public void render(Graphics2D g)
 	{
-		map.drawMap(g, path);
+		map.drawMap(g, path, m0);
 		g.setColor(Color.GRAY);
 		for (int x = 0; x < getWidth(); x += 60)
 		{
@@ -71,8 +134,19 @@ public class Game extends JPanel implements MouseListener
 			g.drawLine(0, y, getWidth(), y);
 		}
 		
-		g.setColor(Color.RED);
-		g.fillRect(player.getX() * 60 + player.getSx(), player.getY() * 60 + player.getSy(), 60, 60);
+		g.drawImage(pack, package1.getX()*60, package1.getY()*60, 60, 60, Color.RED, null);
+		g.drawImage(pack, package2.getX()*60, package2.getY()*60, 60, 60, Color.RED, null);
+		g.drawImage(pack, package3.getX()*60, package3.getY()*60, 60, 60, Color.RED, null);
+		g.drawImage(pack, package4.getX()*60, package4.getY()*60, 60, 60, Color.RED, null);
+		/*g.setColor(Color.PINK);
+		g.fillRect(package1.getX()*60, package1.getY()*60, 60, 60);
+		g.fillRect(package2.getX()*60, package2.getY()*60, 60, 60);
+		g.fillRect(package3.getX()*60, package3.getY()*60, 60, 60);
+		g.fillRect(package4.getX()*60, package4.getY()*60, 60, 60);*/
+		
+		g.drawImage(image, player.getX() * 60 + player.getSx(), player.getY() * 60 + player.getSy(), 60, 60, Color.RED, null);
+		/*g.setColor(Color.RED);
+		g.fillRect(player.getX() * 60 + player.getSx(), player.getY() * 60 + player.getSy(), 60, 60);*/
 	}
 
 	@Override
@@ -99,6 +173,7 @@ public class Game extends JPanel implements MouseListener
 		{
 			path = map.findPath(player.getX(), player.getY(), mx, my);
 			player.followPath(path);
+			
 		}
 		else
 		{
@@ -110,5 +185,98 @@ public class Game extends JPanel implements MouseListener
 	public void mouseReleased(MouseEvent e)
 	{
 	}
+	
+	public boolean compareLocation(int x , int y){
+		if(x==y) return true;
+		else return false;
+	}
+	
+	
+	public int [] nearestPoint(int px, int py,int color){
+		
+		int minDist = 1000;
+		int tempX = 0,tempY = 0;
+		
+		
+		for(int y=0;y<m0.length;y++){
+			for(int x=0; x<m0[0].length; x++){
+				
+				if(m0[y][x] == color){
+					int dist= Math.abs(x-px) + Math.abs(y-py);
+					if(minDist>dist){
+						tempX = x;
+						tempY = y;
+						minDist = dist;
+					}				
+			}
+		}
+		
+		
+		
+		}
+		int tab[] = {tempX,tempY};
+		return tab;
+	}
+	
+	public void deliverPackage(Pack pack) {
+		
+		Instance testInstance = decisionTree.prepareTestInstance(pack.getType(), pack.getSize(), pack.getTime());
+		int result = 0;
+		try {
+			result = (int) id3tree.classifyInstance(testInstance);
+		} catch (NoSupportForMissingValuesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String readableResult = decisionTree.getTrainingData().attribute(3).value(result);
+		System.out.println(" ----------------------------------------- ");
+		System.out.println("Test data               : " + testInstance);
+		System.out.println("Test data classification: " + readableResult);
+		
+		int resultP[] = null;
+		
+		switch(readableResult){
+		//2 - czerwony
+		//3 - zielony
+		//4 - niebieski
+		//5 - pomaranczonwy
+		case "czerwony":
+			resultP = nearestPoint(pack.getX(),pack.getY(),2);
+			break;
+		case "zielony":
+			resultP = nearestPoint(pack.getX(),pack.getY(),3);
+			break;
+		case "niebieski":
+			resultP = nearestPoint(pack.getX(),pack.getY(),4);
+			break;
+		case "pomaranczowy":
+			resultP = nearestPoint(pack.getX(),pack.getY(),5);
+			break;
+		}
+		if (map.getNode(resultP[0]+1, resultP[1]).isWalkable())
+		{
+		path = map.findPath(player.getX(), player.getY(), resultP[0]+1, resultP[1]);
+		player.followPath(path);
+		}
+		else if (map.getNode(resultP[0]-1, resultP[1]).isWalkable())
+		{
+		path = map.findPath(player.getX(), player.getY(), resultP[0]-1, resultP[1]);
+		player.followPath(path);
+		}
+		else if (map.getNode(resultP[0], resultP[1]+1).isWalkable())
+		{
+		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]+1);
+		player.followPath(path);
+		}
+		else if (map.getNode(resultP[0], resultP[1]-1).isWalkable())
+		{
+		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]-1);
+		player.followPath(path);
+		}
+		
+		m0[resultP[1]][resultP[0]]=0;
+	}
+	
 
 }

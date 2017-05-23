@@ -53,7 +53,7 @@ public class Map
 		{
 			for (int y = 0; y < height; y++)
 			{
-				nodes[x][y] = new Node(x, y, map[y][x] == 1);
+				nodes[x][y] = new Node(x, y, (map[y][x] == 1 || map[y][x] == 6));
 			}
 		}
 	}
@@ -69,7 +69,7 @@ public class Map
 	 *            Optional parameter. List containing the nodes to be drawn as
 	 *            path nodes.
 	 */
-	public void drawMap(Graphics g, List<Node> path)
+	public void drawMap(Graphics g, List<Node> path, int[][] map)
 	{
 		for (int y = 0; y < height; y++)
 		{
@@ -77,7 +77,24 @@ public class Map
 			{
 				if (!nodes[x][y].isWalkable())
 				{
-					g.setColor(Color.BLACK);
+					switch (map[y][x]){
+					case 2:
+						g.setColor(Color.RED);
+						break;
+					case 3:
+						g.setColor(Color.GREEN);
+						break;
+					case 4:
+						g.setColor(Color.BLUE);
+						break;
+					case 5:
+						g.setColor(Color.ORANGE);
+						break;
+					case 0:
+						g.setColor(Color.BLACK);
+						break;					
+					}
+					
 				}
 				else if (path != null && path.contains(new Node(x, y, true)))
 				{
