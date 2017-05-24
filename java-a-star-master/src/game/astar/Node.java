@@ -1,10 +1,5 @@
 package game.astar;
 
-/**
- * This class represents a simple node to be used for A* pathfinding.
- * 
- * @author Tiago "neteune" Dopke
- */
 public class Node
 {
 
