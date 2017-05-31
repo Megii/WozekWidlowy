@@ -191,6 +191,7 @@ public class Game extends JPanel implements MouseListener
 	{
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
@@ -229,25 +230,69 @@ public class Game extends JPanel implements MouseListener
 		
 		int minDist = 1000;
 		int tempX = 0,tempY = 0;
+		int destX = 0, destY = 0;
 		
 		
 		for(int y=0;y<m0.length;y++){
 			for(int x=0; x<m0[0].length; x++){
-				
+				int dist = 0;
 				if(m0[y][x] == color){
-					int dist= Math.abs(x-px) + Math.abs(y-py);
-					if(minDist>dist){
-						tempX = x;
-						tempY = y;
-						minDist = dist;
-					}				
+					if (x+1<m0[0].length && map.getNode(x+1, y).isWalkable())
+					{
+						dist = map.findPath(px, py, x+1,y).size();
+						if(minDist>dist){
+							tempX = x+1;
+							tempY = y;
+							destX = x;
+							destY = y;
+							minDist = dist;
+						}	
+					
+					}
+					else if (x-1>= 0 && map.getNode(x-1,y).isWalkable())
+					{
+						dist = map.findPath(px, py, x-1, y).size();
+					
+						if(minDist>dist){
+							tempX = x-1;
+							tempY = y;
+							destX = x;
+							destY = y;
+							minDist = dist;
+						}	
+					}
+					else if (y+1<m0.length && map.getNode(x, y+1).isWalkable() )
+					{
+						dist = map.findPath(px, py,x, y+1).size();
+						if(minDist>dist){
+							tempX = x;
+							tempY = y+1;
+							destX = x;
+							destY = y;
+							minDist = dist;
+						}	
+					
+					}
+					else if (y-1>=0 && map.getNode(x, y-1).isWalkable())
+					{
+						dist = map.findPath(px, py, x, y-1).size();
+						if(minDist>dist){
+							tempX = x;
+							tempY = y-1;
+							destX = x;
+							destY = y;
+							minDist = dist;
+						}	
+					
+					}
+								
 			}
 		}
 		
 		
 		
 		}
-		int tab[] = {tempX,tempY};
+		int tab[] = {tempX,tempY,destX,destY};
 		return tab;
 	}
 	
@@ -287,28 +332,12 @@ public class Game extends JPanel implements MouseListener
 			resultP = nearestPoint(pack.getX(),pack.getY(),5);
 			break;
 		}
-		if (map.getNode(resultP[0]+1, resultP[1]).isWalkable())
-		{
-		path = map.findPath(player.getX(), player.getY(), resultP[0]+1, resultP[1]);
-		player.followPath(path);
-		}
-		else if (map.getNode(resultP[0]-1, resultP[1]).isWalkable())
-		{
-		path = map.findPath(player.getX(), player.getY(), resultP[0]-1, resultP[1]);
-		player.followPath(path);
-		}
-		else if (map.getNode(resultP[0], resultP[1]+1).isWalkable())
-		{
-		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]+1);
-		player.followPath(path);
-		}
-		else if (map.getNode(resultP[0], resultP[1]-1).isWalkable())
-		{
-		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]-1);
-		player.followPath(path);
-		}
 		
-		m0[resultP[1]][resultP[0]]=0;
+		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]);
+		player.followPath(path);
+		
+		
+		m0[resultP[3]][resultP[2]]=0;
 	}
 	
 
