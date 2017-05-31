@@ -35,6 +35,7 @@ public class Game extends JPanel implements MouseListener
 	private Id3 id3tree;
 	private Image image;
 	private Image pack;
+	private Tour tour;
 	
 	//2 - czerwony
 	//3 - zielony
@@ -82,16 +83,41 @@ public class Game extends JPanel implements MouseListener
 		}
 		
 		map = new Map(m);
-		player = new Player(0, 15);
+		player = new Player(9, 7);
 		package1 = new Pack(4,1,"chemia","male","dlugi");
 		package2 = new Pack(13,0,"zywnosc","duze","krotki");
 		package3 = new Pack(2,14,"tekstylia","duze","dlugi");
 		package4 = new Pack(10,14,"zywnosc","male","dlugi");
-	}
+		TourManager.addPack(package1);
+		TourManager.addPack(package2);
+		TourManager.addPack(package3);
+		TourManager.addPack(package4);
+		
+		  Population pop = new Population(50, true);
+	        System.out.println("Initial distance: " + pop.getFittest().getDistance());
+
+	        // Evolve population for 100 generations
+	        pop = GA.evolvePopulation(pop);
+	        for (int i = 0; i < 100; i++) {
+	            pop = GA.evolvePopulation(pop);
+	        }
+	        
+	        tour = pop.getFittest();
+
+	        // Print final results
+	        System.out.println("Finished");
+	        System.out.println("Final distance: " + pop.getFittest().getDistance());
+	        System.out.println("Solution:");
+	        System.out.println(tour);
+	        
+	        
+	    }
+	
 
 	public void update()
 	{
 		player.update();
+		
 		
 		if(compareLocation(player.getX(),package1.getX()) && compareLocation(player.getY(),package1.getY())){
 			deliverPackage(package1);
@@ -119,6 +145,7 @@ public class Game extends JPanel implements MouseListener
 			package4.setX(-1);
 			package4.setY(-1);
 		}
+		
 	}
 
 	public void render(Graphics2D g)
@@ -167,7 +194,13 @@ public class Game extends JPanel implements MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		int mx = e.getX() /60;
+		
+		for(int i=0;i<TourManager.numberOfPacks();i++){
+			path = map.findPath(player.getX(), player.getY(), tour.getPack(i).getX(),tour.getPack(i).getY());
+			player.followPath(path);
+		}
+		
+		/*int mx = e.getX() /60;
 		int my = e.getY() /60;
 		if (map.getNode(mx, my).isWalkable())
 		{
@@ -178,7 +211,7 @@ public class Game extends JPanel implements MouseListener
 		else
 		{
 			System.out.println("Can't walk to that node!");
-		}
+		}*/
 	}
 
 	@Override

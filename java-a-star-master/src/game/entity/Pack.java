@@ -46,5 +46,17 @@ public class Pack {
 	public void setY(int y){
 		this.y = y;
 	}
+	
+	public double distanceTo(Pack pack){
+        double distance = Math.abs(x-pack.getX()) + Math.abs(y-pack.getY());
+        
+        return distance;
+    }
+	
+	 
+    @Override
+    public String toString(){
+        return getX()+", "+getY();
+    }
 
 }
