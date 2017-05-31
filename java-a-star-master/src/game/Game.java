@@ -236,7 +236,7 @@ public class Game extends JPanel implements MouseListener
 		for(int y=0;y<m0.length;y++){
 			for(int x=0; x<m0[0].length; x++){
 				int dist = 0;
-				if(m0[y][x] == color){
+				if(m0[y][x]!=0 && m0[y][x] == color){
 					if (x+1<m0[0].length && map.getNode(x+1, y).isWalkable())
 					{
 						dist = map.findPath(px, py, x+1,y).size();
