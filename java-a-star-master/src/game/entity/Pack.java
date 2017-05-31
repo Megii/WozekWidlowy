@@ -1,6 +1,6 @@
 package game.entity;
 
-
+import game.astar.Map;
 
 public class Pack {
 	
@@ -48,7 +48,8 @@ public class Pack {
 	}
 	
 	public double distanceTo(Pack pack){
-        double distance = Math.abs(x-pack.getX()) + Math.abs(y-pack.getY());
+		int distance = Map.findPath(this.getX(), this.getY(), pack.getX(), pack.getY()).size();
+        //double distance = Math.abs(x-pack.getX()) + Math.abs(y-pack.getY());
         
         return distance;
     }

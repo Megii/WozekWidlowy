@@ -24,17 +24,17 @@ public class Map
 	/**
 	 * The width of the map, in columns.
 	 */
-	private int width;
+	private static int width;
 
 	/**
 	 * The height of the map, in rows.
 	 */
-	private int height;
+	private static int height;
 
 	/**
 	 * Array full of nodes to be used for the pathfinding.
 	 */
-	private Node[][] nodes;
+	private static Node[][] nodes;
 
 	/**
 	 * Creates a map based on a two dimensional array, where each zero is a
@@ -151,7 +151,7 @@ public class Map
 	 *            Desired node's Y coordinate.
 	 * @return The desired node if the parameters are valid, null otherwise.
 	 */
-	public Node getNode(int x, int y)
+	public static Node getNode(int x, int y)
 	{
 		if (x >= 0 && x < width && y >= 0 && y < height)
 		{
@@ -177,7 +177,7 @@ public class Map
 	 * @return A list containing all of the visited nodes if there is a
 	 *         solution, an empty list otherwise.
 	 */
-	public final List<Node> findPath(int startX, int startY, int goalX, int goalY)
+	public final static List<Node> findPath(int startX, int startY, int goalX, int goalY)
 	{
 		// If our start position is the same as our goal position ...
 		if (startX == goalX && startY == goalY)
@@ -256,7 +256,7 @@ public class Map
 	 * @return a list containing all of the visited nodes, from the goal to the
 	 *         start.
 	 */
-	private List<Node> calcPath(Node start, Node goal)
+	private static List<Node> calcPath(Node start, Node goal)
 	{
 		LinkedList<Node> path = new LinkedList<Node>();
 
@@ -279,7 +279,7 @@ public class Map
 	 *            The list to be checked.
 	 * @return The node with the lowest F score in the list.
 	 */
-	private Node lowestFInList(List<Node> list)
+	private static Node lowestFInList(List<Node> list)
 	{
 		Node cheapest = list.get(0);
 		for (int i = 0; i < list.size(); i++)
@@ -300,7 +300,7 @@ public class Map
 	 * @return A LinkedList with nodes adjacent to the given node if those
 	 *         exist, are walkable and are not already in the closed list.
 	 */
-	private List<Node> getAdjacent(Node node, List<Node> closedList)
+	private static List<Node> getAdjacent(Node node, List<Node> closedList)
 	{
 		List<Node> adjacentNodes = new LinkedList<Node>();
 		int x = node.getX();
@@ -331,7 +331,7 @@ public class Map
 		// Check top node
 		if (y > 0)
 		{
-			adjacent = this.getNode(x, y - 1);
+			adjacent = getNode(x, y - 1);
 			if (adjacent != null && adjacent.isWalkable() && !closedList.contains(adjacent))
 			{
 				adjacentNodes.add(adjacent);
@@ -341,7 +341,7 @@ public class Map
 		// Check bottom node
 		if (y < height)
 		{
-			adjacent = this.getNode(x, y + 1);
+			adjacent = getNode(x, y + 1);
 			if (adjacent != null && adjacent.isWalkable() && !closedList.contains(adjacent))
 			{
 				adjacentNodes.add(adjacent);

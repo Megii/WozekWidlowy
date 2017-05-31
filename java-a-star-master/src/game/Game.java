@@ -106,7 +106,7 @@ public class Game extends JPanel implements MouseListener
 
 	        // Print final results
 	        System.out.println("Finished");
-	        System.out.println("Final distance: " + pop.getFittest().getDistance());
+	        System.out.println("Final distance: " + tour.getDistance());
 	        System.out.println("Solution:");
 	        System.out.println(tour);
 	        
