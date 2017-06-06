@@ -84,10 +84,10 @@ public class Game extends JPanel implements MouseListener
 		
 		map = new Map(m);
 		player = new Player(9, 7);
-		package1 = new Pack(4,1,"chemia","male","dlugi");
-		package2 = new Pack(13,0,"zywnosc","duze","krotki");
-		package3 = new Pack(2,14,"tekstylia","duze","dlugi");
-		package4 = new Pack(10,14,"zywnosc","male","dlugi");
+		package1 = new Pack(18,0,"zywnosc","nielatwopalne","mala","duza","krotki","mala","mala","niebieski");
+		package2 = new Pack(2,14,"zywnosc","nielatwopalne","mala","mala","dlugi","mala","mala","zielony");
+		package3 = new Pack(1,1,"tekstylia","latwopalne","mala","mala","krotki","mala","mala","pomaranczowy");
+		package4 = new Pack(10,14,"chemia","latwopalne","duza","mala","krotki","duza","duza","czerwony");
 		TourManager.addPack(package1);
 		TourManager.addPack(package2);
 		TourManager.addPack(package3);
@@ -298,7 +298,7 @@ public class Game extends JPanel implements MouseListener
 	
 	public void deliverPackage(Pack pack) {
 		
-		Instance testInstance = decisionTree.prepareTestInstance(pack.getType(), pack.getSize(), pack.getTime());
+		Instance testInstance = decisionTree.prepareTestInstance(pack.getTyp(), pack.getPalnosc(),pack.getWrazliwosc(),pack.getOdpornosc(),pack.getTermin(),pack.getWaga(),pack.getWielkosc(), pack.getRezultat());
 		int result = 0;
 		try {
 			result = (int) id3tree.classifyInstance(testInstance);
@@ -307,7 +307,7 @@ public class Game extends JPanel implements MouseListener
 			e.printStackTrace();
 		}
 		
-		String readableResult = decisionTree.getTrainingData().attribute(3).value(result);
+		String readableResult = decisionTree.getTrainingData().attribute(7).value(result);
 		System.out.println(" ----------------------------------------- ");
 		System.out.println("Test data               : " + testInstance);
 		System.out.println("Test data classification: " + readableResult);
