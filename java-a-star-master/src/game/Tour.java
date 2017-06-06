@@ -91,6 +91,10 @@ public class Tour{
         return tour.contains(pack);
     }
     
+    public void remove(int x){
+    	 tour.remove(x);
+    }
+    
     @Override
     public String toString() {
         String geneString = "|";

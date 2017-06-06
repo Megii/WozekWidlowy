@@ -51,13 +51,18 @@ public class DecisionTree {
 		return id3tree;
 	}
 
-	public Instance prepareTestInstance(String type, String size, String time) {
-		Instance instance = new Instance(3);
+	public Instance prepareTestInstance(String typ, String palnosc, String wrazliwosc, String odpornosc, String termin, String waga, String wielkosc, String rezultat) {
+		Instance instance = new Instance(8);
 		instance.setDataset(trainingData);
 
-		instance.setValue(trainingData.attribute(0), type);
-		instance.setValue(trainingData.attribute(1), size);
-		instance.setValue(trainingData.attribute(2), time);
+		instance.setValue(trainingData.attribute(0), typ);
+		instance.setValue(trainingData.attribute(1), palnosc);
+		instance.setValue(trainingData.attribute(2), wrazliwosc);
+		instance.setValue(trainingData.attribute(3), odpornosc);
+		instance.setValue(trainingData.attribute(4), termin);
+		instance.setValue(trainingData.attribute(5), waga);
+		instance.setValue(trainingData.attribute(6), wielkosc);
+		instance.setValue(trainingData.attribute(7), rezultat);
 
 		return instance;
 	}

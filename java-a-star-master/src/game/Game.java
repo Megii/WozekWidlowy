@@ -84,10 +84,10 @@ public class Game extends JPanel implements MouseListener
 		
 		map = new Map(m);
 		player = new Player(9, 7);
-		package1 = new Pack(4,1,"chemia","male","dlugi");
-		package2 = new Pack(13,0,"zywnosc","duze","krotki");
-		package3 = new Pack(2,14,"tekstylia","duze","dlugi");
-		package4 = new Pack(10,14,"zywnosc","male","dlugi");
+		package1 = new Pack(4,1,"chemia","latwopalne","duza","mala","krotki","duza","duza","czerwony");
+		package2 = new Pack(13,0,"zywnosc","nielatwopalne","mala","mala","dlugi","mala","mala","zielony");
+		package3 = new Pack(2,14,"tekstylia","latwopalne","mala","mala","krotki","mala","mala","pomaranczowy");
+		package4 = new Pack(10,14,"zywnosc","nielatwopalne","mala","duza","krotki","mala","mala","niebieski");
 		TourManager.addPack(package1);
 		TourManager.addPack(package2);
 		TourManager.addPack(package3);
@@ -122,28 +122,23 @@ public class Game extends JPanel implements MouseListener
 		if(compareLocation(player.getX(),package1.getX()) && compareLocation(player.getY(),package1.getY())){
 			deliverPackage(package1);
 			
-			package1.setX(-1);
-			package1.setY(-1);
+			
 							
 		}
 		if(compareLocation(player.getX(),package2.getX()) && compareLocation(player.getY(),package2.getY())){
 			deliverPackage(package2);
 			
-			package2.setX(-1);
-			package2.setY(-1);
-			
+		
 		}
 		if(compareLocation(player.getX(),package3.getX()) && compareLocation(player.getY(),package3.getY())){
 			deliverPackage(package3);
 			
-			package3.setX(-1);
-			package3.setY(-1);
+			
 		}
 		if(compareLocation(player.getX(),package4.getX()) && compareLocation(player.getY(),package4.getY())){
 			deliverPackage(package4);
 			
-			package4.setX(-1);
-			package4.setY(-1);
+			
 		}
 		
 	}
@@ -196,10 +191,10 @@ public class Game extends JPanel implements MouseListener
 	public void mousePressed(MouseEvent e)
 	{
 		
-		for(int i=0;i<TourManager.numberOfPacks();i++){
-			path = map.findPath(player.getX(), player.getY(), tour.getPack(i).getX(),tour.getPack(i).getY());
+		
+			path = map.findPath(player.getX(), player.getY(), tour.getPack(0).getX(),tour.getPack(0).getY());
 			player.followPath(path);
-		}
+		
 		
 		/*int mx = e.getX() /60;
 		int my = e.getY() /60;
@@ -298,7 +293,8 @@ public class Game extends JPanel implements MouseListener
 	
 	public void deliverPackage(Pack pack) {
 		
-		Instance testInstance = decisionTree.prepareTestInstance(pack.getType(), pack.getSize(), pack.getTime());
+		Instance testInstance = decisionTree.prepareTestInstance(pack.getTyp(), pack.getPalnosc(),
+				pack.getWrazliwosc(),pack.getOdpornosc(),pack.getTermin(),pack.getWaga(),pack.getWielkosc(), pack.getRezultat());
 		int result = 0;
 		try {
 			result = (int) id3tree.classifyInstance(testInstance);
@@ -307,7 +303,7 @@ public class Game extends JPanel implements MouseListener
 			e.printStackTrace();
 		}
 		
-		String readableResult = decisionTree.getTrainingData().attribute(3).value(result);
+		String readableResult = decisionTree.getTrainingData().attribute(7).value(result);
 		System.out.println(" ----------------------------------------- ");
 		System.out.println("Test data               : " + testInstance);
 		System.out.println("Test data classification: " + readableResult);
@@ -332,12 +328,13 @@ public class Game extends JPanel implements MouseListener
 			resultP = nearestPoint(pack.getX(),pack.getY(),5);
 			break;
 		}
-		
+		System.out.println(resultP[0]+" "+resultP[1]);
 		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]);
 		player.followPath(path);
 		
-		
-		m0[resultP[3]][resultP[2]]=0;
+		tour.remove(0);
+		pack.setX(resultP[2]);
+		pack.setY(resultP[3]);
 	}
 	
 
