@@ -85,11 +85,7 @@ public class Game extends JPanel implements MouseListener
 		map = new Map(m);
 		player = new Player(9, 7);
 
-		package1 = new Pack(4,1,"chemia","latwopalne","duza","mala","krotki","duza","duza","czerwony");
-		package2 = new Pack(13,0,"zywnosc","nielatwopalne","mala","mala","dlugi","mala","mala","zielony");
-		package3 = new Pack(2,14,"tekstylia","latwopalne","mala","mala","krotki","mala","mala","pomaranczowy");
-		package4 = new Pack(10,14,"zywnosc","nielatwopalne","mala","duza","krotki","mala","mala","niebieski");
-
+	
 		package1 = new Pack(18,0,"zywnosc","nielatwopalne","mala","duza","krotki","mala","mala","niebieski");
 		package2 = new Pack(2,14,"zywnosc","nielatwopalne","mala","mala","dlugi","mala","mala","zielony");
 		package3 = new Pack(1,1,"tekstylia","latwopalne","mala","mala","krotki","mala","mala","pomaranczowy");
@@ -107,6 +103,8 @@ public class Game extends JPanel implements MouseListener
 	        pop = GA.evolvePopulation(pop);
 	        for (int i = 0; i < 100; i++) {
 	            pop = GA.evolvePopulation(pop);
+	            
+	           
 	        }
 	        
 	        tour = pop.getFittest();
@@ -200,6 +198,7 @@ public class Game extends JPanel implements MouseListener
 		
 		
 			path = map.findPath(player.getX(), player.getY(), tour.getPack(0).getX(),tour.getPack(0).getY());
+			printRoute(path);
 			player.followPath(path);
 		
 		
@@ -298,6 +297,25 @@ public class Game extends JPanel implements MouseListener
 		return tab;
 	}
 	
+	public void printRoute(List<Node> path){
+		for(int i=1;i<path.size();i++){
+			Node current = path.get(i);
+			Node previous = path.get(i-1);
+			if(current.getX()+1==previous.getX()&&current.getY()==previous.getY()){
+				System.out.println("Lewo");
+			}
+			else if(current.getX()-1==previous.getX()&&current.getY()==previous.getY()){
+				System.out.println("Prawo");
+			}
+			else if(current.getY()+1==previous.getY()&&current.getX()==previous.getX()){
+				System.out.println("Góra");
+			}
+			else if(current.getY()-1==previous.getY()&&current.getX()==previous.getX()){
+				System.out.println("Dó³");
+			}
+		}
+	}
+	
 	public void deliverPackage(Pack pack) {
 		
 
@@ -339,8 +357,9 @@ public class Game extends JPanel implements MouseListener
 			resultP = nearestPoint(pack.getX(),pack.getY(),5);
 			break;
 		}
-		System.out.println(resultP[0]+" "+resultP[1]);
+		System.out.println("X: "+resultP[0]+", Y: "+resultP[1]);
 		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]);
+		printRoute(path);
 		player.followPath(path);
 		
 		tour.remove(0);
