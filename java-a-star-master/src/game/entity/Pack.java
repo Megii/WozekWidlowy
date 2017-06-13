@@ -23,6 +23,7 @@ public class Pack {
 
 	public void setSymbol(char symbol) {
 		this.symbol = symbol;
+		System.out.println("Ustawiam symbol na "+symbol);
 	}
 
 	public Pack(int x, int y, String typ, String palnosc, String wrazliwosc, String odpornosc, String termin,String waga,String wielkosc, String rezultat){

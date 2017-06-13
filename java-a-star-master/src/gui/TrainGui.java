@@ -2,8 +2,10 @@ package gui;
 
 
 import data.GoodOutputs;
+
 import data.GoodPixels;
 import data.ReadWriteFile;
+import game.Game;
 import gui.components.CustomPanel;
 import gui.components.DrawingPanel;
 import neuron.Train;
@@ -11,7 +13,10 @@ import neuron.TrainingSet;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Console;
 import java.util.ArrayList;
+
+
 
 public class TrainGui extends JFrame {
 
@@ -36,6 +41,9 @@ public class TrainGui extends JFrame {
     private JComboBox<String> drawLetterCombo;
     private JComboBox<String> trainAsCombo;
     private JTextArea outputTextArea;
+    private char parametr;
+    
+    private Game game;
 
 
     public TrainGui() {
@@ -57,8 +65,37 @@ public class TrainGui extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
     }
+    
+    public TrainGui(Game game) {
+        super("Rozpoznawanie symbolu");
 
-    private void setMainPanel() {
+        networkTrainer = new Train();
+        this.game=game;
+
+        setMainPanel();
+        setLeftSide();
+        setCenterArea();
+        setRightSide();
+        setOutputPanel();
+
+        setOnClicks();
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
+        setSize(new Dimension(1260, 500));
+        setLocationRelativeTo(null);
+        setResizable(false);
+    }
+
+    public char getParametr() {
+		return parametr;
+	}
+
+	public void setParametr(char parametr) {
+		this.parametr = parametr;
+	}
+
+	private void setMainPanel() {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.LIGHT_GRAY);
         setContentPane(mainPanel);
@@ -197,16 +234,8 @@ public class TrainGui extends JFrame {
         
         changeButton.addActionListener(e -> {
         	String letter = (String) trainAsCombo.getSelectedItem();
-        	char charLetter = letter.charAt(0);
-        	if(  charLetter == 65){
-            System.out.println("A");
-        	}
-        	if(  charLetter == 66){
-                System.out.println("B");
-            	}
-        	if(  charLetter == 67){
-                System.out.println("C");
-            	}
+        	game.getTour().getPack(0).setSymbol(letter.charAt(0));
+        	
         	
         });
 

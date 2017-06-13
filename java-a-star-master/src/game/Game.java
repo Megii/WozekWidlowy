@@ -384,6 +384,9 @@ public class Game extends JPanel implements MouseListener
 	public void setTour(Tour tour) {
 		this.tour = tour;
 	}
+	public void test(){
+		System.out.println("aaaaaaa");
+	}
 	
 
 }

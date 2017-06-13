@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 import gui.TrainGui;
 
 import javax.swing.JFrame;
@@ -26,9 +30,9 @@ public class Main
 	private static boolean forceQuit;
 	
 	private static JButton button;
-
 	private static Game game;
-
+	private static Scanner scanner;
+	
 	private static void init()
 	{
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -39,8 +43,12 @@ public class Main
 		button = new JButton("Zmieñ symbol");
 		button.setPreferredSize(new Dimension(200,1000));
 		button.addActionListener(e -> {
-           trainGui = new TrainGui();
+           trainGui = new TrainGui(game);
         });
+		
+		scanner = new Scanner(System.in);
+
+		
 	}
 
 	private static void start()
@@ -113,6 +121,9 @@ public class Main
 				}
 			}
 		}
+		String next = scanner.nextLine();
+		if(next == "A"){System.out.println("dziala");}
+		
 	}
 	
 
@@ -138,9 +149,12 @@ public class Main
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
-		game.getTour().getPack(0);
-	
 		Main.start();
+		
+
+		
+		System.out.println(trainGui.getParametr());
+		
 		
 	}
 
