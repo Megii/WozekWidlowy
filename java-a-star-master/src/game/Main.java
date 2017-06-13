@@ -1,22 +1,31 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import gui.TrainGui;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JButton;
 
 public class Main
 {
 
-	public static final int WIDTH = 1240;
+	public static final int WIDTH = 1260;
 	public static final int HEIGHT = 1380;
 	public static final String NAME = "Magazyn";
+	
+	public static TrainGui trainGui;
 
 	private static BufferedImage image;
 	private static Graphics2D g;
 	private static boolean forceQuit;
+	
+	private static JButton button;
 
 	private static Game game;
 
@@ -27,6 +36,11 @@ public class Main
 		g.setBackground(Color.BLACK);
 
 		game = new Game();
+		button = new JButton("Zmieñ symbol");
+		button.setPreferredSize(new Dimension(200,1000));
+		button.addActionListener(e -> {
+           trainGui = new TrainGui();
+        });
 	}
 
 	private static void start()
@@ -100,19 +114,34 @@ public class Main
 			}
 		}
 	}
+	
+
 
 	public static void main(String[] args)
 	{
 		Main.init();
 
 		JFrame frame = new JFrame(NAME);
+	    frame.setPreferredSize(new Dimension(1366, 760));
+		
+		JPanel panel = new JPanel();
+		panel.add(game);
+		panel.add(button);
+
+		
+		frame.setContentPane(panel);
+		
+		//frame.add(button);
 		frame.setDefaultCloseOperation(3);
-		frame.setContentPane(game);
+		//frame.setContentPane(game);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
+		
+		game.getTour().getPack(0);
+	
 		Main.start();
+		
 	}
 
 }

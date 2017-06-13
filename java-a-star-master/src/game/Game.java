@@ -37,10 +37,12 @@ public class Game extends JPanel implements MouseListener
 	private Image pack;
 	private Tour tour;
 	
+	//1 - bia³y
 	//2 - czerwony
 	//3 - zielony
 	//4 - niebieski
 	//5 - pomaranczonwy
+	//6 - szary
 
 	int[][] m0 =  {// 0	 1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
 					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//0
@@ -51,8 +53,8 @@ public class Game extends JPanel implements MouseListener
 					{ 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1},//5
 					{ 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 3, 3, 3, 1, 3, 3, 3, 3, 1},//6
 					{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //7
-					{ 1, 4, 1, 1, 4, 1, 5, 1, 5, 1, 3, 1, 3, 1, 2, 1, 2, 2, 1},//8
-					{ 1, 4, 4, 4, 4, 1, 5, 1, 5, 1, 3, 3, 3, 1, 2, 1, 2, 2, 1},//9
+					{ 1, 4, 1, 1, 4, 1, 5, 1, 5, 1, 7, 1, 7, 1, 2, 1, 2, 2, 1},//8
+					{ 1, 4, 4, 4, 4, 1, 5, 1, 5, 1, 7, 7, 7, 1, 2, 1, 2, 2, 1},//9
 					{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //10
 					{ 1, 4, 4, 1, 4, 1, 4, 4, 4, 1, 5, 5, 5, 1, 5, 1, 5, 5, 1},//11
 					{ 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 5, 1},//12
@@ -107,13 +109,13 @@ public class Game extends JPanel implements MouseListener
 	           
 	        }
 	        
-	        tour = pop.getFittest();
+	        setTour(pop.getFittest());
 
 	        // Print final results
 	        System.out.println("Finished");
-	        System.out.println("Final distance: " + tour.getDistance());
+	        System.out.println("Final distance: " + getTour().getDistance());
 	        System.out.println("Solution:");
-	        System.out.println(tour);
+	        System.out.println(getTour());
 	        
 	        
 	    }
@@ -197,7 +199,7 @@ public class Game extends JPanel implements MouseListener
 	{
 		
 		
-			path = map.findPath(player.getX(), player.getY(), tour.getPack(0).getX(),tour.getPack(0).getY());
+			path = map.findPath(player.getX(), player.getY(), getTour().getPack(0).getX(),getTour().getPack(0).getY());
 			printRoute(path);
 			player.followPath(path);
 		
@@ -339,32 +341,48 @@ public class Game extends JPanel implements MouseListener
 		
 		int resultP[] = null;
 		
-		switch(readableResult){
-		//2 - czerwony
-		//3 - zielony
-		//4 - niebieski
-		//5 - pomaranczonwy
-		case "czerwony":
-			resultP = nearestPoint(pack.getX(),pack.getY(),2);
-			break;
-		case "zielony":
-			resultP = nearestPoint(pack.getX(),pack.getY(),3);
-			break;
-		case "niebieski":
-			resultP = nearestPoint(pack.getX(),pack.getY(),4);
-			break;
-		case "pomaranczowy":
-			resultP = nearestPoint(pack.getX(),pack.getY(),5);
-			break;
+		if(pack.getSymbol()==(char) (67)) {
+			resultP = nearestPoint(pack.getX(),pack.getY(),7);
+		}
+		else{
+				
+			switch(readableResult){
+			//2 - czerwony
+			//3 - zielony
+			//4 - niebieski
+			//5 - pomaranczonwy
+			case "czerwony":
+				resultP = nearestPoint(pack.getX(),pack.getY(),2);
+				break;
+			case "zielony":
+				resultP = nearestPoint(pack.getX(),pack.getY(),3);
+				break;
+			case "niebieski":
+				resultP = nearestPoint(pack.getX(),pack.getY(),4);
+				break;
+			case "pomaranczowy":
+				resultP = nearestPoint(pack.getX(),pack.getY(),5);
+				break;
+			}
 		}
 		System.out.println("X: "+resultP[0]+", Y: "+resultP[1]);
 		path = map.findPath(player.getX(), player.getY(), resultP[0], resultP[1]);
 		printRoute(path);
 		player.followPath(path);
 		
-		tour.remove(0);
+		getTour().remove(0);
 		pack.setX(resultP[2]);
 		pack.setY(resultP[3]);
+	}
+
+
+	public Tour getTour() {
+		return tour;
+	}
+
+
+	public void setTour(Tour tour) {
+		this.tour = tour;
 	}
 	
 

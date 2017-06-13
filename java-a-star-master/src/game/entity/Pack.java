@@ -15,8 +15,17 @@ public class Pack {
 	private String waga;
 	private String wielkosc;
 	private String rezultat;
+	private char symbol;
 	
-	public Pack(int x, int y, String typ, String palnosc, String wrazliwosc, String odpornosc, String termin,String waga,String wielkosc, String rezultat ){
+	public char getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(char symbol) {
+		this.symbol = symbol;
+	}
+
+	public Pack(int x, int y, String typ, String palnosc, String wrazliwosc, String odpornosc, String termin,String waga,String wielkosc, String rezultat){
 		this.x = x;
 		this.y = y;
 		this.typ = typ;
@@ -27,6 +36,7 @@ public class Pack {
 		this.waga = waga;
 		this.wielkosc = wielkosc;
 		this.rezultat = rezultat;
+		this.symbol = (char) (65 + (int)(Math.random() * ((67 - 65) + 1)));
 	}
 	
 	public String getTyp(){

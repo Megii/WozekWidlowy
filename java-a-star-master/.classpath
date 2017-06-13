@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="resources/" kind="src" path="src"/>
 	<classpathentry kind="src" path="input"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="java-cup-0.11a.jar"/>
-	<classpathentry kind="lib" path="junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="weka-stable-3.6.6.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="java-cup-0.11a.jar"/>
+	<classpathentry exported="true" kind="lib" path="junit-3.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-stable-3.6.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

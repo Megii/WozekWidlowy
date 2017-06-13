@@ -90,6 +90,9 @@ public class Map
 					case 5:
 						g.setColor(Color.ORANGE);
 						break;
+					case 7:
+						g.setColor(Color.GRAY);
+						break;
 					case 0:
 						g.setColor(Color.BLACK);
 						break;					
